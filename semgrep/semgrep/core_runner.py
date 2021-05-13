@@ -119,7 +119,6 @@ class CoreRunner:
         timeout: int,
         max_memory: int,
         timeout_threshold: int,
-        report_time: bool,
     ):
         self._output_settings = output_settings
         self._allow_exec = allow_exec
@@ -127,7 +126,6 @@ class CoreRunner:
         self._timeout = timeout
         self._max_memory = max_memory
         self._timeout_threshold = timeout_threshold
-        self._report_time = report_time
 
     def _flatten_rule_patterns(self, rules: List[Rule]) -> Iterator[Pattern]:
         """
@@ -248,15 +246,13 @@ class CoreRunner:
                 str(self._timeout),
                 "-max_memory",
                 str(self._max_memory),
+                "-json_time",
             ]
 
             equivalences = rule.equivalences
             if equivalences:
                 self._write_equivalences_file(equiv_file, equivalences)
                 cmd += ["-equivalences", equiv_file.name]
-
-            if self._report_time:
-                cmd += ["-json_time"]
 
             if self._output_settings.debug:
                 cmd += ["-debug"]
@@ -465,7 +461,6 @@ class CoreRunner:
                         patterns,
                         targets,
                         timeout=self._timeout,
-                        report_time=self._report_time,
                     )
                 else:  # Run semgrep-core
                     output_json = profiler.track(
@@ -671,10 +666,8 @@ class CoreRunner:
                         str(self._timeout),
                         "-max_memory",
                         str(self._max_memory),
+                        "-json_time",
                     ]
-
-                    if self._report_time:
-                        cmd += ["-json_time"]
 
                     if self._output_settings.debug:
                         cmd += ["-debug"]
