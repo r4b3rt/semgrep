@@ -1,1 +1,0 @@
-Rule id: - contains a pattern that could not be parsed as a pattern for language C: `#include<asdf><<>>><$X>`
